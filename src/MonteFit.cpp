@@ -49,14 +49,20 @@ void MonteFit::Minimize(void) {
             it != data_.end(); it++)
             diff += (fabs((*it).second - Gaussian((*it).first, sigma, amp, phase)) / (*it).second);
 
-        if(diff < currrentMin_)
+        if(diff < currentMin_) {
             currentMin_ = diff;
+            rBeta_ = sigma;
+            rPhase_ = phase;
+            rAmp_ = amp;
+        }
         
         if(diff < tolerance_) {
             rBeta_ = sigma;
             rPhase_ = phase;
             rAmp_ = amp;
+            break;
         }
     }//for(unsigned int i ...)
+    cout << rBeta_ << " " << rAmp_ << " " << rPhase_ << endl;
 }
 

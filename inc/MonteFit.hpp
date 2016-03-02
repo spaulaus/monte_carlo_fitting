@@ -13,43 +13,6 @@
 #include <random>
 #include <vector>
 
-class McFitResults {
-public:
-    /** Default Constructor */
-    McFitResults (){};
-    /** Default Destructor */
-    ~McFitResults(){};
-        
-    /** \return amp_ */
-    double GetAmplitude(void){return(amp_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetAmplitude(const double &a) {amp_ = a;}
-    /** \return beta_ */
-
-    double GetSigma(void){return(beta_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetSigma(const double &a) {beta_ = a;};
-
-    /** \return phase_ */
-    double GetPhase(void){return(phase_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetPhase(const double &a) {phase_ = a;};
-
-    /** \return gamma_ */
-    double GetDecayConst(void){return(gamma_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetDecayConst(const double &a) {gamma_ = a;};
-
-private:
-    
-
-    
-};
-
 class MonteFit {
 public:
     /** Default Constructor */
@@ -80,7 +43,7 @@ public:
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetData(const std::vector< std::pair<double, double> > &a) {data_ = a;}
-    
+
     /** \return beta_ */
     double GetSigma(void){return(beta_);};
     /** Sets Parameter a_ to the value 
@@ -109,7 +72,6 @@ private:
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
 
-    std::pair<double,double> results_;
     double rAmp_, rBeta_, rPhase_;
 
     double GenerateParameterSets(void);
