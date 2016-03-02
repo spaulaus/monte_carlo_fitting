@@ -55,11 +55,19 @@ int main(int argc, char* argv[]) {
     //Actually perform the fitting
     func.Minimize();
 
+    //Obtain the vector containing the results
     vector<double> results = func.GetResults();
 
-    ostream out("fitResults.dat");
-    out << "# Number of iterations necessary " << gaus->GetNumIterations() << endl;
+    //Output our results to a text file for plotting.
+    ofstream out("fitResults.dat");
+    out << "# Number of iterations necessary " << func.GetNumIterations() << endl
+        << "#phase = " << results[0] << " " << endl
+        << "#amplitude = " << results[1] << " " << endl
+        << "#sigma = " << results[2] << " " << endl
+        <<"#-------------------------------------------------------" << endl;
+    
     for(double i = -5; i <= 15; i += 0.5)
-        cout << i << " " << gaus->operator()(&i, &results[0]) << endl;
+        out << i << " " << gaus->operator()(&i, &results[0]) << endl;
+    out.close();
 
 }
