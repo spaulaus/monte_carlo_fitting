@@ -13,18 +13,14 @@
 #include <random>
 #include <vector>
 
+#include "GaussianFunction.hpp"
+
 class MonteFit {
 public:
     /** Default Constructor */
     MonteFit ();
     /** Default Destructor */
     ~MonteFit();
-
-    /** \return amp_ */
-    double GetAmplitude(void){return(amp_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetAmplitude(const double &a) {amp_ = a;}
 
     /** \return maxIter_ */
     double GetMaxIterations(void){return(maxIter_);};
@@ -43,39 +39,24 @@ public:
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetData(const std::vector< std::pair<double, double> > &a) {data_ = a;}
-
-    /** \return beta_ */
-    double GetSigma(void){return(beta_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetSigma(const double &a) {beta_ = a;};
-
-    /** \return phase_ */
-    double GetPhase(void){return(phase_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetPhase(const double &a) {phase_ = a;};
-
-    /** \return gamma_ */
-    double GetDecayConst(void){return(gamma_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetDecayConst(const double &a) {gamma_ = a;};
-
-    double Gaussian(const double &t, const double &sigma,
-                    const double &amp, const double &phase);
     
+    void SetFunction(GaussianFunction *a) {gaus_ = a;}; 
+
     void Minimize(void);
 private:
     unsigned int maxIter_;
-    double amp_, beta_, gamma_, phase_, tolerance_;
+    double tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
 
-    double rAmp_, rBeta_, rPhase_;
+    std::vector<double> results_;
 
     double GenerateParameterSets(void);
+    void Initialize();
+
+    GaussianFunction *gaus_;
     
+    double *func;
     std::mt19937_64 *engine_;
     std::uniform_real_distribution<double> *dist_;
 };

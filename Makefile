@@ -20,7 +20,7 @@ LDLIBS = -ldl -lpthread
 c++SrcSuf = cpp
 
 #Make the object list and prefix the object directory
-OBJS = main.o MonteFit.o
+OBJS = main.o MonteFit.o VandleTimingFunction.o GaussianFunction.o
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 

@@ -22,6 +22,8 @@
 #include <random>
 #include <vector>
 
+#include "VandleTimingFunction.hpp"
+#include "GaussianFunction.hpp"
 #include "MonteFit.hpp"
 
 using namespace std;
@@ -30,16 +32,27 @@ int main(int argc, char* argv[]) {
     //Instance of the MC fitting;
     MonteFit func;
 
+    double phase = 5.0, amp = 3.0, sigma = 2.0;
+    
+    GaussianFunction *gaus = new GaussianFunction();
+    vector<double> params;
+    params.push_back(phase);
+    params.push_back(amp);
+    params.push_back(sigma);
+        
     //Generating the function that we are going to fit.
     vector< pair<double,double> > data;
     for(double i = -5; i <= 15; i += 0.5)
-        data.push_back(make_pair(i, func.Gaussian(i,2.,3.,5.)));
+        data.push_back(make_pair(i, gaus->operator()(&i, &params[0])));
 
-    //Pass the data to the fitter 
+    //Pass the data to the fitter
+    func.SetFunction(gaus);
     func.SetData(data);
     func.SetTolerance(1e-6);
-    func.SetMaxIterations(1e4);
+    func.SetMaxIterations(1e6);
 
     //Actually perform the fitting
     func.Minimize();
+
+                       
 }

@@ -17,9 +17,7 @@
 using namespace std;
 
 MonteFit::MonteFit(void) {
-    engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
-    dist_ = new uniform_real_distribution<double>(0,10);
-    currentMin_ = 1.e7;
+    Initialize();
 }
 
 MonteFit::~MonteFit(void){
@@ -27,11 +25,10 @@ MonteFit::~MonteFit(void){
     delete(dist_);
 }
 
-double MonteFit::Gaussian(const double &t, const double &amp,
-                          const double &sigma, const double &phase) {
-    double coeff = amp/(sigma*sqrt(2*M_PI));
-    double exponent = -pow((t-phase)/sigma,2)*0.5;
-    return( coeff * exp(exponent) );
+void MonteFit::Initialize() {
+    engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
+    dist_ = new uniform_real_distribution<double>(0,10);
+    currentMin_ = 1.e7;
 }
 
 double MonteFit::GenerateParameterSets(void) {
@@ -39,30 +36,29 @@ double MonteFit::GenerateParameterSets(void) {
 }
 
 void MonteFit::Minimize(void) {
+    vector<double> params(3,0);
     for(unsigned int i = 0; i < maxIter_; i++) {
-        double sigma = GenerateParameterSets();
-        double phase = GenerateParameterSets();
-        double amp    = GenerateParameterSets();
-        
+        params[0] = GenerateParameterSets();
+        params[1] = GenerateParameterSets();
+        params[2] = GenerateParameterSets();
+
         double diff = 0;
-        for(vector<pair <double, double> >::const_iterator it = data_.begin();
+        for(vector<pair <double, double> >::iterator it = data_.begin();
             it != data_.end(); it++)
-            diff += (fabs((*it).second - Gaussian((*it).first, sigma, amp, phase)) / (*it).second);
+            diff += (fabs((*it).second - gaus_->operator()(&((*it).first), &params[0])) / (*it).second);
 
         if(diff < currentMin_) {
             currentMin_ = diff;
-            rBeta_ = sigma;
-            rPhase_ = phase;
-            rAmp_ = amp;
+            results_ = params;
         }
         
         if(diff < tolerance_) {
-            rBeta_ = sigma;
-            rPhase_ = phase;
-            rAmp_ = amp;
+            results_ = params;
             break;
         }
     }//for(unsigned int i ...)
-    cout << rBeta_ << " " << rAmp_ << " " << rPhase_ << endl;
+    
+    for(double i = -5; i <= 15; i += 0.5)
+        cout << i << " " << gaus_->operator()(&i, &results_[0]) << endl;
 }
 
