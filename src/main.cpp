@@ -18,6 +18,7 @@
   *  You should have received a copy of the GNU General Public License     *
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
   *************************************************************************/
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -54,5 +55,11 @@ int main(int argc, char* argv[]) {
     //Actually perform the fitting
     func.Minimize();
 
-                       
+    vector<double> results = func.GetResults();
+
+    ostream out("fitResults.dat");
+    out << "# Number of iterations necessary " << gaus->GetNumIterations() << endl;
+    for(double i = -5; i <= 15; i += 0.5)
+        cout << i << " " << gaus->operator()(&i, &results[0]) << endl;
+
 }

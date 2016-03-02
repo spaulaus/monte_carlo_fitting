@@ -29,6 +29,7 @@ void MonteFit::Initialize() {
     engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
     dist_ = new uniform_real_distribution<double>(0,10);
     currentMin_ = 1.e7;
+    numIter_ = 0;
 }
 
 double MonteFit::GenerateParameterSets(void) {
@@ -37,7 +38,7 @@ double MonteFit::GenerateParameterSets(void) {
 
 void MonteFit::Minimize(void) {
     vector<double> params(3,0);
-    for(unsigned int i = 0; i < maxIter_; i++) {
+    for(unsigned int i = 0; i < maxIter_; ++i, ++numIter_) {
         params[0] = GenerateParameterSets();
         params[1] = GenerateParameterSets();
         params[2] = GenerateParameterSets();
@@ -57,8 +58,5 @@ void MonteFit::Minimize(void) {
             break;
         }
     }//for(unsigned int i ...)
-    
-    for(double i = -5; i <= 15; i += 0.5)
-        cout << i << " " << gaus_->operator()(&i, &results_[0]) << endl;
 }
 

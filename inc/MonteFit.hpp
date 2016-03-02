@@ -40,11 +40,15 @@ public:
      * \param[in] a : The value to set to a_ */
     void SetData(const std::vector< std::pair<double, double> > &a) {data_ = a;}
     
-    void SetFunction(GaussianFunction *a) {gaus_ = a;}; 
+    void SetFunction(GaussianFunction *a) {gaus_ = a;};
+
+    std::vector<double> GetResults(void) {return(results_);};
+    unsigned int GetNumIterations(void){return(numIter_);};
 
     void Minimize(void);
 private:
     unsigned int maxIter_;
+    unsigned int numIter_;
     double tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
