@@ -1,7 +1,7 @@
 /*! \file main.cpp
- * \brief 
+ * \brief main for a simple MC fitting class
  * \author S. V. Paulauskas
- * \date 
+ * \date February 25, 2016
  */
  /***************************************************************************
   *  Copyright S. V. Paulauskas 2012-2014                                  *
@@ -19,11 +19,27 @@
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
   *************************************************************************/
 #include <iostream>
+#include <random>
+#include <vector>
+
+#include "MonteFit.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    //Instance of the MC fitting;
+    MonteFit func;
 
+    //Generating the function that we are going to fit.
+    vector< pair<double,double> > data;
+    for(double i = -5; i <= 15; i += 0.5)
+        data.push_back(make_pair(i, func.Gaussian(i,2.,3.,5.)));
 
+    //Pass the data to the fitter 
+    func.SetData(data);
+    func.SetTolerance(1e-4);
+    func.SetMaxIterations(1e4);
 
+    //Actually perform the fitting
+    func.Minimize();
 }
