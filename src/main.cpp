@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 
     //Pass the data to the fitter 
     func.SetData(data);
-    func.SetTolerance(1e-4);
+    func.SetTolerance(1e-6);
     func.SetMaxIterations(1e4);
 
     //Actually perform the fitting
