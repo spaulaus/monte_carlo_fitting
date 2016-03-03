@@ -22,6 +22,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <chrono>
 
 #include "VandleTimingFunction.hpp"
 #include "GaussianFunction.hpp"
@@ -31,36 +32,56 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     //Instance of the MC fitting;
-    MonteFit func;
+    MonteFit fitter;
 
     double phase = 5.0, amp = 3.0, sigma = 2.0;
+    double spreadP = 0.5, spreadA = 0.5, spreadS = 0.5;
     
     GaussianFunction *gaus = new GaussianFunction();
+    
     vector<double> params;
     params.push_back(phase);
     params.push_back(amp);
     params.push_back(sigma);
-        
+
+    vector< pair<double,double> > guesses;
+    guesses.push_back(make_pair(phase+0.4, spreadP));
+    guesses.push_back(make_pair(amp+0.6, spreadA));
+    guesses.push_back(make_pair(sigma-0.2, spreadS));
+
     //Generating the function that we are going to fit.
     vector< pair<double,double> > data;
     for(double i = -5; i <= 15; i += 0.5)
         data.push_back(make_pair(i, gaus->operator()(&i, &params[0])));
 
     //Pass the data to the fitter
-    func.SetFunction(gaus);
-    func.SetData(data);
-    func.SetTolerance(1e-6);
-    func.SetMaxIterations(1e6);
+    fitter.SetFunction(gaus);
+    fitter.SetInitialGuesses(guesses);
+    fitter.SetData(data);
+    fitter.SetTolerance(1e-4);
+    fitter.SetMaxIterations(1e6);
 
     //Actually perform the fitting
-    func.Minimize();
+    std::chrono::time_point<std::chrono::system_clock> start =
+        std::chrono::system_clock::now();
+    fitter.Minimize();
+    std::chrono::time_point<std::chrono::system_clock> end =
+        std::chrono::system_clock::now();
+
+    std::chrono::duration<double> diff = (end-start);
+
+    // ofstream timeout("mintime.dat", ios::app);
+    // timeout << diff.count() << endl;
+    // timeout.close();
+
+    cout << diff.count() << endl;
 
     //Obtain the vector containing the results
-    vector<double> results = func.GetResults();
+    vector<double> results = fitter.GetResults();
 
     //Output our results to a text file for plotting.
     ofstream out("fitResults.dat");
-    out << "# Number of iterations necessary " << func.GetNumIterations() << endl
+    out << "# Number of iterations necessary " << fitter.GetNumIterations() << endl
         << "#phase = " << results[0] << " " << endl
         << "#amplitude = " << results[1] << " " << endl
         << "#sigma = " << results[2] << " " << endl

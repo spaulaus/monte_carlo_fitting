@@ -39,7 +39,11 @@ public:
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetData(const std::vector< std::pair<double, double> > &a) {data_ = a;}
-    
+
+    /** Sets Parameter a_ to the value 
+     * \param[in] a : The value to set to a_ */
+    void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);
+        
     void SetFunction(GaussianFunction *a) {gaus_ = a;};
 
     std::vector<double> GetResults(void) {return(results_);};
@@ -52,16 +56,16 @@ private:
     double tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
-
+    std::vector<std::pair<double,double> > iGuess_;
     std::vector<double> results_;
 
-    double GenerateParameterSets(void);
     void Initialize();
 
+    //Pointer to the Gaussian Function
+    ///To be replaced with templated pointer to general function
     GaussianFunction *gaus_;
     
-    double *func;
     std::mt19937_64 *engine_;
-    std::uniform_real_distribution<double> *dist_;
+    std::vector<std::normal_distribution<> *> distList_;
 };
 #endif //__MONTEFIT_HPP__
