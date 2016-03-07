@@ -18,9 +18,12 @@
   *  You should have received a copy of the GNU General Public License     *
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
   *************************************************************************/
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <vector>
+
+#include <chrono>
 
 #include "MonteFit.hpp"
 
@@ -40,6 +43,17 @@ int main(int argc, char* argv[]) {
     func.SetTolerance(1e-6);
     func.SetMaxIterations(1e4);
 
-    //Actually perform the fitting
+    std::chrono::time_point<std::chrono::system_clock> start =
+        std::chrono::system_clock::now();
     func.Minimize();
+    std::chrono::time_point<std::chrono::system_clock> end =
+        std::chrono::system_clock::now();
+
+    std::chrono::duration<double> diff = (end-start);
+
+    ofstream timeout("mintime.dat", ios::app);
+    timeout << diff.count() << endl;
+    timeout.close();
+
+    //cout << diff.count() << endl;
 }

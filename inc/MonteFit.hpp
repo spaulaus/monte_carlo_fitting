@@ -62,12 +62,14 @@ public:
      * \param[in] a : The value to set to a_ */
     void SetDecayConst(const double &a) {gamma_ = a;};
 
+    unsigned int GetNumIterations(void){return(numIter_);};
+
     double Gaussian(const double &t, const double &sigma,
                     const double &amp, const double &phase);
     
     void Minimize(void);
 private:
-    unsigned int maxIter_;
+    unsigned int maxIter_, numIter_;
     double amp_, beta_, gamma_, phase_, tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;

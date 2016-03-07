@@ -39,7 +39,7 @@ double MonteFit::GenerateParameterSets(void) {
 }
 
 void MonteFit::Minimize(void) {
-    for(unsigned int i = 0; i < maxIter_; i++) {
+    for(unsigned int i = 0; i < maxIter_; i++, ++numIter_) {
         double sigma = GenerateParameterSets();
         double phase = GenerateParameterSets();
         double amp    = GenerateParameterSets();
@@ -63,6 +63,6 @@ void MonteFit::Minimize(void) {
             break;
         }
     }//for(unsigned int i ...)
-    cout << rBeta_ << " " << rAmp_ << " " << rPhase_ << endl;
+    cout << rBeta_ << "," << rAmp_ << "," << rPhase_ << "," << numIter_ << endl;
 }
 
