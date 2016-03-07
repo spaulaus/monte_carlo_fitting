@@ -66,6 +66,6 @@ private:
     GaussianFunction *gaus_;
     
     std::mt19937_64 *engine_;
-    std::vector<std::normal_distribution<> *> distList_;
+    std::vector<std::uniform_real_distribution<> *> distList_;
 };
 #endif //__MONTEFIT_HPP__

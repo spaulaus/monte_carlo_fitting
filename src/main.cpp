@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
     MonteFit fitter;
 
     double phase = 5.0, amp = 3.0, sigma = 2.0;
-    double spreadP = 0.5, spreadA = 0.5, spreadS = 0.5;
     
     GaussianFunction *gaus = new GaussianFunction();
     
@@ -45,9 +44,9 @@ int main(int argc, char* argv[]) {
     params.push_back(sigma);
 
     vector< pair<double,double> > guesses;
-    guesses.push_back(make_pair(phase+0.4, spreadP));
-    guesses.push_back(make_pair(amp+0.6, spreadA));
-    guesses.push_back(make_pair(sigma-0.2, spreadS));
+    guesses.push_back(make_pair(-100, 100));
+    guesses.push_back(make_pair(-100, 100));
+    guesses.push_back(make_pair(-100, 100));
 
     //Generating the function that we are going to fit.
     vector< pair<double,double> > data;
@@ -59,8 +58,10 @@ int main(int argc, char* argv[]) {
     fitter.SetInitialGuesses(guesses);
     fitter.SetData(data);
     fitter.SetTolerance(1e-4);
-    fitter.SetMaxIterations(1e6);
+    fitter.SetMaxIterations(1e5);
 
+    cout << "counter,diff,mu,amp,sigma" << endl;
+    
     //Actually perform the fitting
     std::chrono::time_point<std::chrono::system_clock> start =
         std::chrono::system_clock::now();
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
     // timeout << diff.count() << endl;
     // timeout.close();
 
-    cout << diff.count() << endl;
+    //cout << diff.count() << " " << fitter.GetNumIterations() << endl;
 
     //Obtain the vector containing the results
     vector<double> results = fitter.GetResults();
