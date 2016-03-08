@@ -1,3 +1,7 @@
+#A Gaussian function with the following parameters
+#mu = 5.0
+#sigma = 2.0
+#amp = 3.0
 -5 2.23008e-06
 -4.5 7.54426e-06
 -4 2.39756e-05
