@@ -54,6 +54,4 @@ int main(int argc, char* argv[]) {
     ofstream timeout("mintime.dat", ios::app);
     timeout << diff.count() << endl;
     timeout.close();
-
-    //cout << diff.count() << endl;
 }

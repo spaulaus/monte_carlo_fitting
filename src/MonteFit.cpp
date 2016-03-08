@@ -47,7 +47,7 @@ void MonteFit::Minimize(void) {
         double diff = 0;
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
             it != data_.end(); it++)
-            diff += (fabs((*it).second - Gaussian((*it).first, sigma, amp, phase)) / (*it).second);
+            diff += (fabs((*it).second - Gaussian((*it).first, amp, sigma, phase)) / (*it).second);
 
         if(diff < currentMin_) {
             currentMin_ = diff;
