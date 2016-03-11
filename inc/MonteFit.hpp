@@ -80,5 +80,7 @@ private:
     
     std::mt19937_64 *engine_;
     std::uniform_real_distribution<double> *dist_;
+    std::uniform_real_distribution<double> *dist1_;
+    std::uniform_real_distribution<double> *dist2_;
 };
 #endif //__MONTEFIT_HPP__

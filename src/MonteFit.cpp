@@ -19,6 +19,8 @@ using namespace std;
 MonteFit::MonteFit(void) {
     engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
     dist_ = new uniform_real_distribution<double>(0,10);
+    dist1_ = new uniform_real_distribution<double>(0,10);
+    dist2_ = new uniform_real_distribution<double>(0,10);
     currentMin_ = 1.e7;
 }
 
@@ -44,9 +46,9 @@ void MonteFit::Minimize(void) {
     
     numIter_ = 0;
     for(unsigned int i = 0; i < maxIter_; i++, ++numIter_) {
-        double sigma = GenerateParameterSets();
-        double phase = GenerateParameterSets();
-        double amp    = GenerateParameterSets();
+        double sigma = dist_->operator()(*engine_);
+        double amp    = dist1_->operator()(*engine_);
+        double phase = dist2_->operator()(*engine_);
 
         double diff = 0;
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
