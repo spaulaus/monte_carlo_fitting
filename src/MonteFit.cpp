@@ -18,9 +18,9 @@ using namespace std;
 
 MonteFit::MonteFit(void) {
     engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
-    dist_ = new uniform_real_distribution<double>(0,10);
-    dist1_ = new uniform_real_distribution<double>(0,10);
-    dist2_ = new uniform_real_distribution<double>(0,10);
+    dist_ = new uniform_real_distribution<double>(0,4);
+    dist1_ = new uniform_real_distribution<double>(1,5);
+    dist2_ = new uniform_real_distribution<double>(2.5,7.5);
     currentMin_ = 1.e7;
 }
 
