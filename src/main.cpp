@@ -43,15 +43,5 @@ int main(int argc, char* argv[]) {
     func.SetTolerance(1e-6);
     func.SetMaxIterations(1e4);
 
-    std::chrono::time_point<std::chrono::system_clock> start =
-        std::chrono::system_clock::now();
     func.Minimize();
-    std::chrono::time_point<std::chrono::system_clock> end =
-        std::chrono::system_clock::now();
-
-    std::chrono::duration<double> diff = (end-start);
-
-    ofstream timeout("mintime.dat", ios::app);
-    timeout << diff.count() << endl;
-    timeout.close();
 }

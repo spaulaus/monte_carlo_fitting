@@ -39,11 +39,15 @@ double MonteFit::GenerateParameterSets(void) {
 }
 
 void MonteFit::Minimize(void) {
+    std::chrono::time_point<std::chrono::system_clock> start =
+        std::chrono::system_clock::now();
+    
+    numIter_ = 0;
     for(unsigned int i = 0; i < maxIter_; i++, ++numIter_) {
         double sigma = GenerateParameterSets();
         double phase = GenerateParameterSets();
         double amp    = GenerateParameterSets();
-        
+
         double diff = 0;
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
             it != data_.end(); it++)
@@ -57,12 +61,20 @@ void MonteFit::Minimize(void) {
         }
         
         if(diff < tolerance_) {
+            
             rBeta_ = sigma;
             rPhase_ = phase;
             rAmp_ = amp;
             break;
         }
     }//for(unsigned int i ...)
-    cout << rBeta_ << "," << rAmp_ << "," << rPhase_ << "," << numIter_ << endl;
+
+    std::chrono::time_point<std::chrono::system_clock> end =
+        std::chrono::system_clock::now();
+    
+    std::chrono::duration<double> minTime = (end-start);
+    
+    cout << minTime.count() << "," << currentMin_ << "," << rBeta_ << ","
+         << rAmp_ << "," << rPhase_ << "," << numIter_ << endl;
 }
 
