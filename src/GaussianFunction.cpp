@@ -39,3 +39,16 @@ double GaussianFunction::operator()(double *x, double *par) {
 
     return( coeff * exp(exponent) + baseline_ );
 }
+
+double GaussianFunction::Gaussian(const double &t) {
+    double coeff = amp_/(sigma_*sqrt(2*M_PI));
+    double exponent = -pow((t-mu_)/sigma_,2)*0.5;
+    return( coeff * exp(exponent) + baseline_);
+}
+
+double GaussianFunction::Gaussian(const double &t, const double &sigma,
+                    const double &amp, const double &phase) {
+    double coeff = amp/(sigma*sqrt(2*M_PI));
+    double exponent = -pow((t-phase)/sigma,2)*0.5;
+    return( coeff * exp(exponent));
+}

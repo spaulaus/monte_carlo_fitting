@@ -52,6 +52,10 @@ public:
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetPhase(const double &a) {mu_ = a;};
+    
+    double Gaussian(const double &t);
+    double Gaussian(const double &t, const double &sigma,
+                    const double &amp, const double &phase);
 private:
     double mu_, amp_, sigma_;
     double baseline_;

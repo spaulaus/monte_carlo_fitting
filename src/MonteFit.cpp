@@ -28,17 +28,10 @@ MonteFit::~MonteFit(void){
     for(vector< normal_distribution<> *>::iterator it = distList_.begin();
         it != distList_.end(); it++)
         delete((*it));
-}
-
-double MonteFit::Gaussian(const double &t, const double &amp,
-                          const double &sigma, const double &phase) {
-    double coeff = amp/(sigma*sqrt(2*M_PI));
-    double exponent = -pow((t-phase)/sigma,2)*0.5;
-    return( coeff * exp(exponent) );
+    delete(results_);
 }
 
 void MonteFit::SetInitialGuesses(const std::vector< std::pair<double, double> > &a) {
-        iGuess_ = a;
         for(vector< pair<double, double> >::const_iterator it = a.begin();
             it != a.end(); it++)
             distList_.push_back(new normal_distribution<double>((*it).first,
@@ -51,35 +44,27 @@ void MonteFit::Minimize(void) {
     
     numIter_ = 0;
     for(unsigned int i = 0; i < maxIter_; i++, ++numIter_) {
-        double sigma = distList_.at(0)->operator()(*engine_);
-        double amp = distList_.at(1)->operator()(*engine_);
-        double phase = distList_.at(2)->operator()(*engine_);
+        for(unsigned int j = 0; j < results_->size(); j++)
+            results_->at(j) = distList_[j]->operator()(*engine_);
         
         double diff = 0;
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
             it != data_.end(); it++)
-            diff += (pow((*it).second - Gaussian((*it).first, amp, sigma, phase),2) / (*it).second);
+            diff += pow((*it).second -
+                        func->Gaussian((*it).first, results_->at(0), results_->at(1),results_->at(2)), 2)
+                     / (*it).second;
 
-        if(diff < currentMin_) {
+        if(diff < currentMin_)
             currentMin_ = diff;
-            rBeta_ = sigma;
-            rPhase_ = phase;
-            rAmp_ = amp;
-        }
-        
-        if(diff < tolerance_) {
-            rBeta_ = sigma;
-            rPhase_ = phase;
-            rAmp_ = amp;
+        if(diff < tolerance_)
             break;
-        }
     }//for(unsigned int i ...)
     std::chrono::time_point<std::chrono::system_clock> end =
         std::chrono::system_clock::now();
     
     std::chrono::duration<double> minTime = (end-start);
     
-    cout << minTime.count() << "," << currentMin_ << "," << rBeta_ << ","
-         << rAmp_ << "," << rPhase_ << "," << numIter_ << endl;
+    cout << minTime.count() << "," << currentMin_ << "," << results_->at(0) << ","
+         << results_->at(1) << "," << results_->at(2) << "," << numIter_ << endl;
 }
 

@@ -33,7 +33,12 @@ int main(int argc, char* argv[]) {
 
     GaussianFunction *gauss = new GaussianFunction();
 
-    double phase = 5.0, amp = 3.0, sigma = 2.0;
+    double phase = 5.0, amp = 3.0, sigma = 2.0, baseline = 0.0;
+    gauss->SetPhase(phase);
+    gauss->SetAmplitude(amp);
+    gauss->SetSigma(sigma);
+    gauss->SetBaseline(baseline);
+    
     vector< pair<double,double> > guesses;
     guesses.push_back(make_pair(sigma,1));
     guesses.push_back(make_pair(amp, 1));
@@ -42,13 +47,14 @@ int main(int argc, char* argv[]) {
     //Generating the function that we are going to fit.
     vector< pair<double,double> > data;
     for(double i = -5; i <= 15; i += 0.5)
-        data.push_back(make_pair(i, fitter.Gaussian(i,sigma,amp,phase)));
+        data.push_back(make_pair(i, gauss->Gaussian(i)));
 
     //Pass the data to the fitter 
     fitter.SetInitialGuesses(guesses);
     fitter.SetData(data);
     fitter.SetTolerance(0.02);
     fitter.SetMaxIterations(1e4);
+    fitter.SetNumPar(3);
 
     //Actually perform the fitting
     fitter.Minimize();

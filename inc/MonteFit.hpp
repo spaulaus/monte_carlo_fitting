@@ -13,6 +13,8 @@
 #include <random>
 #include <vector>
 
+#include "GaussianFunction.hpp"
+
 class MonteFit {
 public:
     /** Default Constructor */
@@ -40,13 +42,15 @@ public:
 
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
-    void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);    
+    void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);
 
-    std::vector<double> GetResults(void) {return(results_);};
+    void SetNumPar(const int &a) {results_ = new std::vector<double>(a,0);};
+
+    //std::vector<double> GetResults(void) {return(results_);};
     unsigned int GetNumIterations(void){return(numIter_);};
 
-    double Gaussian(const double &t, const double &sigma,
-                    const double &amp, const double &phase);
+    void SetFunction(GaussianFunction *a){func= a;};
+    std::vector<double> GetResults(void){return(*results_);};
     
     void Minimize(void);
 private:
@@ -55,11 +59,10 @@ private:
     double tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
-    std::vector<std::pair<double,double> > iGuess_;
-    std::vector<double> results_;
+    std::vector<double> *results_;
 
-    double rBeta_, rAmp_, rPhase_;
-    
+    GaussianFunction *func;
+
     double GenerateParameterSets(void);
     
     std::mt19937_64 *engine_;
