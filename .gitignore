@@ -1,8 +1,9 @@
 #The list of files for git to ignore
 #Build files
 *.o
-pixie_ldf_*
+monteFit
 autom4te.cache/
+res/
 
 #Backup files from various editors
 *.save
@@ -41,3 +42,5 @@ data
 *.toc
 *.pdf
 *.ps
+
+.R*
