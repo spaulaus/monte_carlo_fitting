@@ -79,8 +79,6 @@ private:
     double GenerateParameterSets(void);
     
     std::mt19937_64 *engine_;
-    std::normal_distribution<double> *dist_;
-    std::normal_distribution<double> *dist1_;
-    std::normal_distribution<double> *dist2_;
+    std::vector<std::normal_distribution<> *> distList_;
 };
 #endif //__MONTEFIT_HPP__

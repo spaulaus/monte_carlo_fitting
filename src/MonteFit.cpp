@@ -18,15 +18,19 @@ using namespace std;
 
 MonteFit::MonteFit(void) {
     engine_ = new mt19937_64(chrono::system_clock::now().time_since_epoch().count());
-    dist_ = new normal_distribution<double>(2,1); //sigma
-    dist1_ = new normal_distribution<double>(3,1); //amp
-    dist2_ = new normal_distribution<double>(4.5,0.5); //phase
+    distList_.push_back( new normal_distribution<double>(2,1) ); //sigma
+    distList_.push_back( new normal_distribution<double>(3,1) ); //amp
+    distList_.push_back( new normal_distribution<double>(4.5,0.5) ); //phase
     currentMin_ = 1.e7;
+    maxIter_ = 1e4;
+    tolerance_ = 0.2;
 }
 
 MonteFit::~MonteFit(void){
     delete(engine_);
-    delete(dist_);
+    for(vector< normal_distribution<> *>::iterator it = distList_.begin();
+        it != distList_.end(); it++)
+        delete((*it));
 }
 
 double MonteFit::Gaussian(const double &t, const double &amp,
@@ -37,7 +41,8 @@ double MonteFit::Gaussian(const double &t, const double &amp,
 }
 
 double MonteFit::GenerateParameterSets(void) {
-    return(dist_->operator()(*engine_));
+    //return(dist_->operator()(*engine_));
+    return(0.0);
 }
 
 void MonteFit::Minimize(void) {
@@ -46,9 +51,9 @@ void MonteFit::Minimize(void) {
     
     numIter_ = 0;
     for(unsigned int i = 0; i < maxIter_; i++, ++numIter_) {
-        double sigma = dist_->operator()(*engine_);
-        double amp    = dist1_->operator()(*engine_);
-        double phase = dist2_->operator()(*engine_);
+        double sigma = distList_.at(0)->operator()(*engine_);
+        double amp = distList_.at(1)->operator()(*engine_);
+        double phase = distList_.at(2)->operator()(*engine_);
 
         double diff = 0;
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
