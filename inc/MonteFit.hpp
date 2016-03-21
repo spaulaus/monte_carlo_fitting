@@ -13,8 +13,6 @@
 #include <random>
 #include <vector>
 
-#include "GaussianFunction.hpp"
-
 class MonteFit {
 public:
     /** Default Constructor */
@@ -42,13 +40,14 @@ public:
 
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
-    void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);
-        
-    void SetFunction(GaussianFunction *a) {gaus_ = a;};
+    void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);    
 
     std::vector<double> GetResults(void) {return(results_);};
     unsigned int GetNumIterations(void){return(numIter_);};
 
+    double Gaussian(const double &t, const double &sigma,
+                    const double &amp, const double &phase);
+    
     void Minimize(void);
 private:
     unsigned int maxIter_;
@@ -59,13 +58,11 @@ private:
     std::vector<std::pair<double,double> > iGuess_;
     std::vector<double> results_;
 
-    void Initialize();
-
-    //Pointer to the Gaussian Function
-    ///To be replaced with templated pointer to general function
-    GaussianFunction *gaus_;
+    double rBeta_, rAmp_, rPhase_;
+    
+    double GenerateParameterSets(void);
     
     std::mt19937_64 *engine_;
-    std::vector<std::uniform_real_distribution<> *> distList_;
+    std::vector<std::normal_distribution<> *> distList_;
 };
 #endif //__MONTEFIT_HPP__
