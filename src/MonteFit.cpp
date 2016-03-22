@@ -31,10 +31,14 @@ MonteFit::~MonteFit(void){
 }
 
 void MonteFit::SetInitialGuesses(const std::vector< std::pair<double, double> > &a) {
-        for(vector< pair<double, double> >::const_iterator it = a.begin();
-            it != a.end(); it++)
-            distList_.push_back(new normal_distribution<double>((*it).first,
-                                                                     (*it).second));
+    //create size for results vector. 
+    for(unsigned int i = 0; i < a.size(); i++)
+        results_.push_back(0);
+
+    for(vector< pair<double, double> >::const_iterator it = a.begin();
+        it != a.end(); it++)
+        distList_.push_back(new normal_distribution<double>((*it).first,
+                                                            (*it).second));
 }
 
 void MonteFit::Minimize(void) {
@@ -63,7 +67,9 @@ void MonteFit::Minimize(void) {
     
     std::chrono::duration<double> minTime = (end-start);
     
-    cout << minTime.count() << "," << currentMin_ << "," << results_.at(0) << ","
-         << results_.at(1) << "," << results_.at(2) << "," << numIter_ << endl;
+    cout << minTime.count() << "," << currentMin_ << ",";
+    for(unsigned int i = 0; i < results_.size(); i++)
+        cout << results_[i] << ",";
+    cout << numIter_ << endl;
 }
 

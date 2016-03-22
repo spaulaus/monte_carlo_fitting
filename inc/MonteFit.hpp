@@ -47,9 +47,7 @@ public:
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetMaxIterations(const double &a) {maxIter_ = a;}
-    ///Sets the number of parameters in the minimization
-    void SetNumPar(const int &a) {for(int i = 0; i < a; i++)results_.push_back(0);};
-        /** Sets Parameter a_ to the value 
+    /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetTolerance(const double &a) {tolerance_ = a;}
 private:

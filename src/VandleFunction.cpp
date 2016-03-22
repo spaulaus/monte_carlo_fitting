@@ -33,13 +33,14 @@ double VandleFunction::operator()(double *x, double *par) {
     double amplitude = par[1];
     double beta = par[2];
     double gamma = par[3];
+    double baseline = par[4];
     double diff = x[0] - phase;
 
     if(x[0] < phase)
-        return(baseline_);
+        return(baseline);
 
     double val = amplitude * exp(-beta*diff) * (1-exp(-pow(gamma*diff,4.)))
-        + baseline_;
+        + baseline;
 
     return(val);
 }

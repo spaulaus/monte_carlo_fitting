@@ -50,19 +50,15 @@ int main(int argc, char* argv[]) {
 
     ///Setting the parameters for the fitting data. 
     vector<double> pars;
-    double phase = 5.0, amp = 3.0, sigma = 2.0, gamma = 0.005, baseline = 0.0;
-    pars.push_back(phase);
-    pars.push_back(amp);
-    pars.push_back(sigma);
-    pars.push_back(gamma);
-    pars.push_back(baseline);
-    
+    double phase = 70.90, amp = 19178.2, sigma = 0.27149, gamma = 0.205578, baseline = 436.48;
+        
     ///Setting up the fitting ranges for the parameters.
     vector< pair<double,double> > guesses;
-    guesses.push_back(make_pair(sigma,1));
-    guesses.push_back(make_pair(amp, 1));
-    guesses.push_back(make_pair(phase-0.5, 0.5));
-    guesses.push_back(make_pair(0.0, 0.0));
+    guesses.push_back(make_pair(phase,1000));
+    guesses.push_back(make_pair(amp, 1000));
+    guesses.push_back(make_pair(sigma,0));
+    guesses.push_back(make_pair(gamma,0));
+    guesses.push_back(make_pair(baseline,0));
     
     //Instance of the MC fitting;
     MonteFit fitter;
@@ -77,17 +73,19 @@ int main(int argc, char* argv[]) {
     fitter.SetData(data);
 
     ///Set the stopping criteria for the fit
-    fitter.SetTolerance(0.02);
+    fitter.SetTolerance(4000);
 
     ///Set the maximum number of iterations that the fit is allowed.
     fitter.SetMaxIterations(1e4);
-
-    ///Set the number of parameters to fit.
-    fitter.SetNumPar(4);
 
     ///Actually perform the fitting
     fitter.Minimize();
 
     //Return the results of the fit
+    ofstream fit("fit.dat");
     vector<double> results = fitter.GetResults();
+
+    for(double i = 0; i < 200; i++)
+        fit << i << " " << vandle->operator()(&i, &results[0]) << endl;
+    fit.close();
 }
