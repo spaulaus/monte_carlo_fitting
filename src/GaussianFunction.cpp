@@ -33,11 +33,12 @@ double GaussianFunction::operator()(double *x, double *par) {
     double phase = par[0];
     double amplitude = par[1];
     double sigma = par[2];
+    double baseline = par[3];
 
     double coeff = amplitude/(sigma*sqrt(2*M_PI));
     double exponent = -pow((t-phase)/sigma,2)*0.5;
 
-    return( coeff * exp(exponent) + baseline_ );
+    return( coeff * exp(exponent) + baseline);
 }
 
 double GaussianFunction::Gaussian(const double &t) {
@@ -46,9 +47,12 @@ double GaussianFunction::Gaussian(const double &t) {
     return( coeff * exp(exponent) + baseline_);
 }
 
-double GaussianFunction::Gaussian(const double &t, const double &sigma,
-                    const double &amp, const double &phase) {
-    double coeff = amp/(sigma*sqrt(2*M_PI));
-    double exponent = -pow((t-phase)/sigma,2)*0.5;
-    return( coeff * exp(exponent));
+double GaussianFunction::Gaussian(const double &t, const std::vector<double> *pars) {
+    if(pars->size() != 4) {
+        cerr << "Your parameter list size does not match the expected size of 4" << endl;
+        return(0.0);
+    }
+    double coeff = pars->at(1)/(pars->at(0)*sqrt(2*M_PI));
+    double exponent = -pow((t-pars->at(2))/pars->at(0),2)*0.5;
+    return( coeff * exp(exponent) + pars->at(3));
 }

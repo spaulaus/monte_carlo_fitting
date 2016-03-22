@@ -51,7 +51,7 @@ void MonteFit::Minimize(void) {
         for(vector<pair <double, double> >::const_iterator it = data_.begin();
             it != data_.end(); it++)
             diff += pow((*it).second -
-                        func->Gaussian((*it).first, results_->at(0), results_->at(1),results_->at(2)), 2)
+                        func->Gaussian((*it).first, results_), 2)
                      / (*it).second;
 
         if(diff < currentMin_)

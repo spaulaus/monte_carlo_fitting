@@ -54,8 +54,7 @@ public:
     void SetPhase(const double &a) {mu_ = a;};
     
     double Gaussian(const double &t);
-    double Gaussian(const double &t, const double &sigma,
-                    const double &amp, const double &phase);
+    double Gaussian(const double &t, const std::vector<double> *pars);
 private:
     double mu_, amp_, sigma_;
     double baseline_;
