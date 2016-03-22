@@ -44,13 +44,13 @@ public:
      * \param[in] a : The value to set to a_ */
     void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);
 
-    void SetNumPar(const int &a) {results_ = new std::vector<double>(a,0);};
+    void SetNumPar(const int &a) {for(int i = 0; i < a; i++)results_.push_back(0);};
 
     //std::vector<double> GetResults(void) {return(results_);};
     unsigned int GetNumIterations(void){return(numIter_);};
 
     void SetFunction(GaussianFunction *a){func= a;};
-    std::vector<double> GetResults(void){return(*results_);};
+    std::vector<double> GetResults(void){return(results_);};
     
     void Minimize(void);
 private:
@@ -59,7 +59,7 @@ private:
     double tolerance_;
     double currentMin_;
     std::vector<std::pair<double,double> > data_;
-    std::vector<double> *results_;
+    std::vector<double> results_;
 
     GaussianFunction *func;
 

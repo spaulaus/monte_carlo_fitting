@@ -27,36 +27,9 @@
 
 class GaussianFunction {
 public:
-    GaussianFunction() {baseline_ = 0;};
+    GaussianFunction() {};
     ~GaussianFunction(){};
 
     double operator() (double *x, double *p);
- 
-    void SetBaseline(const double &a){baseline_ = a;};
-    double GetBaseline(void) {return(baseline_);};
-
-    /** \return amp_ */
-    double GetAmplitude(void){return(amp_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetAmplitude(const double &a) {amp_ = a;}
-    
-    /** \return beta_ */
-    double GetSigma(void){return(sigma_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetSigma(const double &a) {sigma_ = a;};
-    
-    /** \return phase_ */
-    double GetPhase(void){return(mu_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetPhase(const double &a) {mu_ = a;};
-    
-    double Gaussian(const double &t);
-    double Gaussian(const double &t, const std::vector<double> *pars);
-private:
-    double mu_, amp_, sigma_;
-    double baseline_;
-};
+ };
 #endif

@@ -40,19 +40,3 @@ double GaussianFunction::operator()(double *x, double *par) {
 
     return( coeff * exp(exponent) + baseline);
 }
-
-double GaussianFunction::Gaussian(const double &t) {
-    double coeff = amp_/(sigma_*sqrt(2*M_PI));
-    double exponent = -pow((t-mu_)/sigma_,2)*0.5;
-    return( coeff * exp(exponent) + baseline_);
-}
-
-double GaussianFunction::Gaussian(const double &t, const std::vector<double> *pars) {
-    if(pars->size() != 4) {
-        cerr << "Your parameter list size does not match the expected size of 4" << endl;
-        return(0.0);
-    }
-    double coeff = pars->at(1)/(pars->at(0)*sqrt(2*M_PI));
-    double exponent = -pow((t-pars->at(2))/pars->at(0),2)*0.5;
-    return( coeff * exp(exponent) + pars->at(3));
-}

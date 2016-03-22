@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 
     GaussianFunction *gauss = new GaussianFunction();
 
+    ///Setting the parameters for the fitting data. 
     vector<double> pars;
     double phase = 5.0, amp = 3.0, sigma = 2.0, baseline = 0.0;
     pars.push_back(sigma);
@@ -40,26 +41,36 @@ int main(int argc, char* argv[]) {
     pars.push_back(phase);
     pars.push_back(baseline);
     
+    ///Generating the function that we are going to fit.
+    vector< pair<double,double> > data;
+    for(double i = -5; i <= 15; i += 0.5)
+        data.push_back(make_pair(i, gauss->operator()(&i, &pars[0])));
+
+    ///Setting up the fitting ranges for the parameters.
     vector< pair<double,double> > guesses;
     guesses.push_back(make_pair(sigma,1));
     guesses.push_back(make_pair(amp, 1));
     guesses.push_back(make_pair(phase-0.5, 0.5));
     guesses.push_back(make_pair(0.0, 0.0));
 
-    //Generating the function that we are going to fit.
-    vector< pair<double,double> > data;
-    for(double i = -5; i <= 15; i += 0.5)
-        data.push_back(make_pair(i, gauss->Gaussian(i, &pars)));
-
-    //Pass the data to the fitter 
+    ///Pass the data to the fitter 
     fitter.SetInitialGuesses(guesses);
+
+    ///Initialize pass the data that we want to fit.
     fitter.SetData(data);
+
+    ///Set the stopping criteria for the fit
     fitter.SetTolerance(0.02);
+
+    ///Set the maximum number of iterations that the fit is allowed.
     fitter.SetMaxIterations(1e4);
+
+    ///Set the number of parameters to fit.
     fitter.SetNumPar(4);
 
-    //Actually perform the fitting
+    ///Actually perform the fitting
     fitter.Minimize();
 
+    //Return the results of the fit
     vector<double> results = fitter.GetResults();
 }
