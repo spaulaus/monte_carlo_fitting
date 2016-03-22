@@ -18,34 +18,45 @@
   *  You should have received a copy of the GNU General Public License     *
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
   *************************************************************************/
+#include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "GaussianFunction.hpp"
 #include "VandleFunction.hpp"
 #include "MonteFit.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    vector<pair<double,double> > data;
+    ///Read in the trace that we plan to fit
+    double junk, junk1, junk2;
+    ifstream infile("data/trc/vandle/mediumTrc08.dat");
+    if(!infile)
+        cerr << "Cannot open input file. Try again, son." << endl;
+    else {
+        while(infile) {
+            if (isdigit(infile.peek())) {
+                infile >> junk >> junk1 >> junk2;
+                if(junk < 110 && junk > 60)
+                    data.push_back(make_pair(junk,junk1));
+            } else
+                infile.ignore(1000,'\n');
+        }
+    }
+
     ///Instance the function to generate the data to fit.
-    GaussianFunction *gauss = new GaussianFunction();
-    ///Instance the VandleFunction
     VandleFunction *vandle = new VandleFunction();
 
     ///Setting the parameters for the fitting data. 
     vector<double> pars;
-    double phase = 5.0, amp = 3.0, sigma = 2.0, baseline = 0.0;
-    pars.push_back(sigma);
-    pars.push_back(amp);
+    double phase = 5.0, amp = 3.0, sigma = 2.0, gamma = 0.005, baseline = 0.0;
     pars.push_back(phase);
+    pars.push_back(amp);
+    pars.push_back(sigma);
+    pars.push_back(gamma);
     pars.push_back(baseline);
     
-    ///Generating the function that we are going to fit.
-    vector< pair<double,double> > data;
-    for(double i = -5; i <= 15; i += 0.5)
-        data.push_back(make_pair(i, gauss->operator()(&i, &pars[0])));
-
     ///Setting up the fitting ranges for the parameters.
     vector< pair<double,double> > guesses;
     guesses.push_back(make_pair(sigma,1));
