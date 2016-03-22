@@ -15,53 +15,46 @@
   **************************************************************************
 */
 
-/*! \file VandleTimingFunction.hpp
+/*! \file VandleFunction.hpp
  *  \brief A class to handle the processing of traces
  *  \author S. V. Paulauskas
  *  \date 03 October 2014
  */
-#include <iostream>
+#ifndef __VANDLEFUNCITON__HPP__
+#define __VANDLEFUNCITON__HPP__
 
-#include <cmath>
+#include <vector>
 
-#include "VandleTimingFunction.hpp"
+#include "FittingFunction.hpp"
 
-using namespace std;
+class VandleFunction : public FittingFunction{
+public:
+    VandleFunction() {};
+    ~VandleFunction(){};
 
-double VandleTimingFunction::operator()(double *x, double *par) {
-    double phase = par[0];
-    double amplitude = par[1];
-    double beta = par[2];
-    double gamma = par[3];
-    double diff = x[0] - phase;
+    double operator() (double *x, double *p);
 
-    if(x[0] < phase)
-        return(baseline_);
+    /** Defines the Fitting function for standard PMTs
+     * \param [in] x : the vector of gsl starting parameters
+     * \param [in] FitData : The data to use for the fit
+     * \param [in] f : pointer to the function
+     * \return an integer that GSL does something magical with */
+    static int Function(int numPoints, int numPars, double *pars,
+                        double *residuals, double **dvec, void *vars);
+    
+    void SetBaseline(const double &a){baseline_ = a;};
+    double GetBaseline(void) {return(baseline_);};
+private:
+    double baseline_;
+};
 
-    double val = amplitude * exp(-beta*diff) * (1-exp(-pow(gamma*diff,4.)))
-        + baseline_;
-
-    return(val);
-}
-
-int VandleTimingFunction::Function (int numPoints, int numPars, double *pars,
-                                    double *dy, double **dvec, void *vars){
-    FittingData *data = (FittingData *)vars;
-    double phi     = pars[0];
-    double alpha   = pars[1];
-    double beta = pars[2];
-    double gamma = pars[3];
-
-    cout << phi << " " << alpha << " " << beta << " " << gamma << endl;
-
-    for(unsigned int t = 0; t < data->y->size(); t++) {
-        double diff = data->y->at(t)-phi;
-
-        if(t < phi)
-            dy[t] = data->y->at(t);
-        else
-            dy[t] = (data->y->at(t) - data->qdc * alpha * exp(-beta*diff) *
-                     (1-exp(-pow(gamma*diff,4.)))) / data->erry->at(t);
-    }
-    return(0);
-}
+///Solely defined for the sake of using the GSL with this class
+class FittingData {
+public:
+    FittingData(){};
+    ~FittingData(){};
+    
+    std::vector<double> *x,  *y, *erry;
+    double qdc, baseline;
+};
+#endif

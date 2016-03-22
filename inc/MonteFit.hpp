@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "GaussianFunction.hpp"
+#include "VandleFunction.hpp"
 
 class MonteFit {
 public:
@@ -22,50 +23,46 @@ public:
     /** Default Destructor */
     ~MonteFit();
 
-    /** \return maxIter_ */
-    double GetMaxIterations(void){return(maxIter_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetMaxIterations(const double &a) {maxIter_ = a;}
-
-    /** \return tolerance_ */
-    double GetTolerance(void){return(tolerance_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
-    void SetTolerance(const double &a) {tolerance_ = a;}
-    
     /** \return data_ */
     std::vector<std::pair<double,double> > GetData(void){return(data_);};
-    /** Sets Parameter a_ to the value 
-     * \param[in] a : The value to set to a_ */
+    /** \return maxIter_ */
+    double GetMaxIterations(void){return(maxIter_);};
+    ///\return Number of Iterations for the fit
+    unsigned int GetNumIterations(void){return(numIter_);};
+    ///\return A vector containing the results of the fit.
+    std::vector<double> GetResults(void){return(results_);};
+    /** \return tolerance_ */
+    double GetTolerance(void){return(tolerance_);};
+        
+    ///The actual work horse of the operation
+    void Minimize(void);
+    /** Sets the data_ vector that the minimization will be working with
+     * \param[in] a : The data set that will be minimized( data_ )*/
     void SetData(const std::vector< std::pair<double, double> > &a) {data_ = a;}
-
+    ///Sets the function to be minimized
+    void SetFunction(FittingFunction *a){func = a;};
     /** Sets Parameter a_ to the value 
      * \param[in] a : The value to set to a_ */
     void SetInitialGuesses(const std::vector< std::pair<double, double> > &a);
-
+    /** Sets Parameter a_ to the value 
+     * \param[in] a : The value to set to a_ */
+    void SetMaxIterations(const double &a) {maxIter_ = a;}
+    ///Sets the number of parameters in the minimization
     void SetNumPar(const int &a) {for(int i = 0; i < a; i++)results_.push_back(0);};
-
-    //std::vector<double> GetResults(void) {return(results_);};
-    unsigned int GetNumIterations(void){return(numIter_);};
-
-    void SetFunction(GaussianFunction *a){func= a;};
-    std::vector<double> GetResults(void){return(results_);};
-    
-    void Minimize(void);
+        /** Sets Parameter a_ to the value 
+     * \param[in] a : The value to set to a_ */
+    void SetTolerance(const double &a) {tolerance_ = a;}
 private:
-    unsigned int maxIter_;
-    unsigned int numIter_;
-    double tolerance_;
-    double currentMin_;
-    std::vector<std::pair<double,double> > data_;
-    std::vector<double> results_;
+    unsigned int maxIter_;///< The Maximum Number of Iterations
+    unsigned int numIter_;///< The Number of iterations that it took to minimize
+    double tolerance_; ///< The stopping criteria for the fitting.
+    double currentMin_; ///< The current minimum of the data.
+    std::vector<std::pair<double,double> > data_; ///< The data that we will be minimizing to
+    std::vector<double> results_; ///< The results of the minimization
 
-    GaussianFunction *func;
+    FittingFunction *func; ///< The function that will be used as the comparison to the data
 
-    double GenerateParameterSets(void);
-    
-    std::mt19937_64 *engine_;
-    std::vector<std::normal_distribution<> *> distList_;
+    std::mt19937_64 *engine_; ///< The Mersenne 64-bit RNG engine
+    std::vector<std::normal_distribution<> *> distList_; ///< Vector containing the RNG distributions
 };
 #endif //__MONTEFIT_HPP__

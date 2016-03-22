@@ -15,12 +15,12 @@ VERSION = $(shell git describe --abbrev=0 --tags)
 #Set some of the compile options
 CXX = g++
 CINCLUDEDIRS = -Iinc
-CXXFLAGS = -fPIC -std=c++0x -g -Wall $(CINCLUDEDIRS)
+CXXFLAGS = -fPIC -std=c++0x -g -Wall $(CINCLUDEDIRS) -p
 LDLIBS = -ldl -lpthread
 c++SrcSuf = cpp
 
 #Make the object list and prefix the object directory
-OBJS = main.o MonteFit.o VandleTimingFunction.o GaussianFunction.o
+OBJS = main.o MonteFit.o VandleFunction.o GaussianFunction.o
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 

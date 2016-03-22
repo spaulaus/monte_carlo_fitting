@@ -22,16 +22,16 @@
 #include <vector>
 
 #include "GaussianFunction.hpp"
+#include "VandleFunction.hpp"
 #include "MonteFit.hpp"
-
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    //Instance of the MC fitting;
-    MonteFit fitter;
-
+    ///Instance the function to generate the data to fit.
     GaussianFunction *gauss = new GaussianFunction();
+    ///Instance the VandleFunction
+    VandleFunction *vandle = new VandleFunction();
 
     ///Setting the parameters for the fitting data. 
     vector<double> pars;
@@ -52,8 +52,14 @@ int main(int argc, char* argv[]) {
     guesses.push_back(make_pair(amp, 1));
     guesses.push_back(make_pair(phase-0.5, 0.5));
     guesses.push_back(make_pair(0.0, 0.0));
+    
+    //Instance of the MC fitting;
+    MonteFit fitter;
 
-    ///Pass the data to the fitter 
+    ///Set the fitting function that we are going to minimize
+    fitter.SetFunction(vandle);
+
+    ///Pass the fitting range to the fitter 
     fitter.SetInitialGuesses(guesses);
 
     ///Initialize pass the data that we want to fit.

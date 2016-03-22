@@ -14,23 +14,21 @@
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
   **************************************************************************
 */
-/*! \file GaussianFunction.hpp
+/*! \file FittingFunction.hpp
  *  \brief A class to handle the processing of traces
  *  \author S. V. Paulauskas
  *  \date March 02, 2016
  */
-#ifndef __GAUSSIANFUNCITON__HPP__
-#define __GAUSSIANFUNCITON__HPP__
+#ifndef __FITTINGFUNCITON__HPP__
+#define __FITTINGFUNCITON__HPP__
 
 #include <vector>
 
-#include "FittingFunction.hpp"
-
-class GaussianFunction : public FittingFunction {
+class FittingFunction {
 public:
-    GaussianFunction() {};
-    ~GaussianFunction(){};
+    FittingFunction() {};
+    ~FittingFunction(){};
 
-    double operator() (double *x, double *p);
+    virtual double operator() (double *x, double *p) = 0;
  };
 #endif
